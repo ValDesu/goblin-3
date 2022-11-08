@@ -91,7 +91,7 @@ export default function LobbyCard(props: any) {
             </button>
             <div className="space-y-2.5 max-w-lg mt-3">
                 <div className="flex items-center space-x-2 w-full">
-                { //TODO: separate component
+                { 
                     lobby.players.map((player : string, index: number) => <Player key={index} data_player_id={player} />)
                 }
                 </div>

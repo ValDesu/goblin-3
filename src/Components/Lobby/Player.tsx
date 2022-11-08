@@ -21,10 +21,13 @@ export default function Player(props: any) {
 
         const fetchPlayer = async () => {
             try {
-                const record = await client.records.getOne('profiles', props.data_player_id, {'$autoCancel': false});
+                const record = await client.records.getOne('players', props.data_player_id, {
+                    '$autoCancel': false,
+                    'expand': 'user',
+                });
                 console.log(record);
 
-                setPlayer({id: record.id, name: record.name});
+                setPlayer({id: record.id, name: record['@expand'].user.name});
                 setLoading(false);
             } catch (error) {
                 console.log(error);

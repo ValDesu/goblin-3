@@ -31,21 +31,33 @@ export default function CreateLobby() {
         try {
             chat_room = await client.records.create('chat_rooms', {});
             console.log(chat_room);
-            setShowModal(false);
         } catch (error) {
             console.log(error);
             setError("An error occured while creating the chat room for your lobby");
             return;
         }
 
-
-
-        //Create the lobby
+        //create the player entity
         const profile_id = JSON.parse(user).model.profile.id;
 
+        let player = null;
+        try {
+            player = await client.records.create('players', {
+                user: profile_id,
+                lobby_ready: false,
+                player_config: null,
+            });
+            console.log(player);
+        } catch (error) {
+            console.log(error);
+            setError("An error occured while creating the player entity for your lobby");
+            return;
+        }
+
+        //Create the lobby
         const data = {
             name: gameName.toString(),
-            players: [profile_id],
+            players: [player.id],
             waiting: true,
             mode: gameMode,
             difficulty: gameDif,
@@ -57,7 +69,6 @@ export default function CreateLobby() {
         try {
             lobby = await client.records.create('lobbies', data);
             console.log(lobby);
-            setShowModal(false);
         } catch (error) {
             console.log(error);
             setError("An error occured while creating your lobby");
@@ -66,8 +77,6 @@ export default function CreateLobby() {
 
         //redirect to the lobby
         window.location.href = "/lobby/" + lobby.id;
-
-        setShowModal(false);
     };
 
     return (
